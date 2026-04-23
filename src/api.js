@@ -111,8 +111,17 @@ export const reactivarAlmacen = (token, id) =>
     headers: h(token),
   });
 
-export const getAlmacenesPublic = (token) =>
-  safeFetch(`${API}/admin/almacenes`, { headers: h(token) });
+export const getAlmacenesPublic = async (token) => {
+  try {
+    return await safeFetch(`${API}/public/almacenes`, { headers: h(token) });
+  } catch {
+    try {
+      return await safeFetch(`${API}/admin/almacenes`, { headers: h(token) });
+    } catch {
+      return [];
+    }
+  }
+};
 
 // ASISTENCIAS
 export const registrarAsistencia = (token, bodyOrAlmacenId) => {
@@ -228,27 +237,54 @@ export const getPagosPorFechas = (token, desde, hasta) =>
   });
 
 export const getMiTotal = async (token) => {
-  const data = await safeFetch(`${API}/asistencias/mi-total`, {
-    headers: h(token),
-  });
+  try {
+    const data = await safeFetch(`${API}/asistencias/mi-total`, {
+      headers: h(token),
+    });
 
-  if (typeof data === "number") return data;
-  return data?.total ?? data?.monto ?? data?.neto ?? 0;
+    if (typeof data === "number") return data;
+    return data?.total ?? data?.monto ?? data?.neto ?? 0;
+  } catch {
+    try {
+      const data = await safeFetch(`${API}/user/total`, {
+        headers: h(token),
+      });
+
+      if (typeof data === "number") return data;
+      return data?.total ?? data?.monto ?? data?.neto ?? 0;
+    } catch {
+      return 0;
+    }
+  }
 };
 
 // NOTIFICACIONES
 export const getNotificaciones = async (token) => {
   try {
-    return await safeFetch(`${API}/user/notificaciones`, {
+    return await safeFetch(`${API}/notificaciones/mis`, {
       headers: h(token),
     });
   } catch {
-    return [];
+    try {
+      return await safeFetch(`${API}/user/notificaciones`, {
+        headers: h(token),
+      });
+    } catch {
+      return [];
+    }
   }
 };
 
-export const confirmarNotif = (token, id) =>
-  safeFetch(`${API}/user/notificaciones/${id}/confirmar`, {
-    method: "PUT",
-    headers: h(token),
-  });
+export const confirmarNotif = async (token, id) => {
+  try {
+    return await safeFetch(`${API}/notificaciones/${id}/confirmar`, {
+      method: "PUT",
+      headers: h(token),
+    });
+  } catch {
+    return await safeFetch(`${API}/user/notificaciones/${id}/confirmar`, {
+      method: "PUT",
+      headers: h(token),
+    });
+  }
+};
