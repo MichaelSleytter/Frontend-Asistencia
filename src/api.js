@@ -130,6 +130,30 @@ export const getMisAsistenciasDeUsuario = (token) =>
     headers: h(token),
   });
 
+// PAGOS EXTRA / PAGOS
+export const getPagosExtraDeUsuario = (token) =>
+  safeFetch(`${API}/user/pagos-extra`, {
+    headers: h(token),
+  });
+
+export const getPagosExtra = (token) =>
+  safeFetch(`${API}/admin/pagos-extra`, {
+    headers: h(token),
+  });
+
+export const crearPagoExtra = (token, body) =>
+  safeFetch(`${API}/admin/pagos-extra`, {
+    method: "POST",
+    headers: hj(token),
+    body: JSON.stringify(body),
+  });
+
+export const eliminarPagoExtra = (token, id) =>
+  safeFetch(`${API}/admin/pagos-extra/${id}`, {
+    method: "DELETE",
+    headers: h(token),
+  });
+
 // DASHBOARD / REPORTES / PAGOS
 export const getDashboard = (token) =>
   safeFetch(`${API}/admin/dashboard`, {
