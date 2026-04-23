@@ -125,6 +125,11 @@ export const getMisAsistencias = (token) =>
     headers: h(token),
   });
 
+export const getMisAsistenciasDeUsuario = (token) =>
+  safeFetch(`${API}/user/asistencias`, {
+    headers: h(token),
+  });
+
 // DASHBOARD / REPORTES / PAGOS
 export const getDashboard = (token) =>
   safeFetch(`${API}/admin/dashboard`, {
