@@ -193,16 +193,16 @@ export const eliminarPagoExtra = (token, id) =>
   });
 
 export const marcarPagoCompleto = (token, usuarioId) =>
-  safeFetch(`${API}/admin/pagos/${usuarioId}/completar`, {
-    method: "PUT",
+  safeFetch(`${API}/admin/usuarios/${usuarioId}/pago-completo`, {
+    method: "POST",
     headers: h(token),
   });
 
 export const registrarAdelanto = (token, usuarioId, monto) =>
-  safeFetch(`${API}/admin/adelantos`, {
+  safeFetch(`${API}/admin/usuarios/${usuarioId}/adelanto`, {
     method: "POST",
     headers: hj(token),
-    body: JSON.stringify({ usuarioId, monto }),
+    body: JSON.stringify({ monto }),
   });
 
 // DASHBOARD / REPORTES / TOTALES
@@ -213,7 +213,7 @@ export const getDashboard = (token) =>
 
 export const getReporte = async (token) => {
   try {
-    return await safeFetch(`${API}/admin/reporte`, {
+    return await safeFetch(`${API}/admin/reportes/usuarios`, {
       headers: h(token),
     });
   } catch {
@@ -223,7 +223,7 @@ export const getReporte = async (token) => {
 
 export const getReporteUsuarios = async (token) => {
   try {
-    return await safeFetch(`${API}/admin/reporte/usuarios`, {
+    return await safeFetch(`${API}/admin/reportes/usuarios`, {
       headers: h(token),
     });
   } catch {
@@ -261,30 +261,16 @@ export const getMiTotal = async (token) => {
 // NOTIFICACIONES
 export const getNotificaciones = async (token) => {
   try {
-    return await safeFetch(`${API}/notificaciones/mis`, {
+    return await safeFetch(`${API}/asistencias/notificaciones`, {
       headers: h(token),
     });
   } catch {
-    try {
-      return await safeFetch(`${API}/user/notificaciones`, {
-        headers: h(token),
-      });
-    } catch {
-      return [];
-    }
+    return [];
   }
 };
 
-export const confirmarNotif = async (token, id) => {
-  try {
-    return await safeFetch(`${API}/notificaciones/${id}/confirmar`, {
-      method: "PUT",
-      headers: h(token),
-    });
-  } catch {
-    return await safeFetch(`${API}/user/notificaciones/${id}/confirmar`, {
-      method: "PUT",
-      headers: h(token),
-    });
-  }
-};
+export const confirmarNotif = (token, id) =>
+  safeFetch(`${API}/asistencias/notificaciones/${id}/confirmar`, {
+    method: "POST",
+    headers: h(token),
+  });
