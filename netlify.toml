@@ -4,7 +4,7 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "https://backend-asistencia-production-e811.up.railway.app/"
+  to = "https://backend-asistencia-production-e811.up.railway.app/:splat"
   status = 200
   force = true
 
