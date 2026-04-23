@@ -51,6 +51,7 @@ const safeFetch = async (url, options = {}) => {
   return body;
 };
 
+// AUTH
 export const login = async (usuario, password) => {
   return safeFetch(`${API}/auth/login`, {
     method: "POST",
@@ -59,6 +60,7 @@ export const login = async (usuario, password) => {
   });
 };
 
+// USUARIOS
 export const getUsuarios = (token) =>
   safeFetch(`${API}/admin/usuarios`, { headers: h(token) });
 
@@ -84,6 +86,7 @@ export const reactivarUsuario = (token, id) =>
     headers: h(token),
   });
 
+// ALMACENES
 export const getAlmacenes = (token) =>
   safeFetch(`${API}/admin/almacenes`, { headers: h(token) });
 
@@ -109,6 +112,7 @@ export const reactivarAlmacen = (token, id) =>
     headers: h(token),
   });
 
+// ASISTENCIAS
 export const registrarAsistencia = (token, body) =>
   safeFetch(`${API}/user/asistencia`, {
     method: "POST",
@@ -121,8 +125,14 @@ export const getMisAsistencias = (token) =>
     headers: h(token),
   });
 
+// DASHBOARD / REPORTES / PAGOS
 export const getDashboard = (token) =>
   safeFetch(`${API}/admin/dashboard`, {
+    headers: h(token),
+  });
+
+export const getReporte = (token) =>
+  safeFetch(`${API}/admin/reporte`, {
     headers: h(token),
   });
 
