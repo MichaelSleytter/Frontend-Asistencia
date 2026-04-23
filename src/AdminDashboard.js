@@ -77,17 +77,30 @@ export default function AdminDashboard() {
   const cerrarSesion = () => { localStorage.removeItem("token"); localStorage.removeItem("rol"); window.location.href = "/"; };
 
   const cargarDatos = async () => {
-    try {
-      const [u, ui, a, ai, r] = await Promise.all([
-        getUsuarios(token), getUsuariosInactivos(token),
-        getAlmacenes(token), getAlmacenesInactivos(token),
-        getReporte(token),
-      ]);
-      setUsuarios(u || []); setInacUsuarios(ui || []);
-      setAlmacenes(a || []); setInacAlmacenes(ai || []);
-      setReporte(r || []);
-    } catch (e) { console.error(e); }
-  };
+  try {
+    const [u, ui, a, ai] = await Promise.all([
+      getUsuarios(token),
+      getUsuariosInactivos(token),
+      getAlmacenes(token),
+      getAlmacenesInactivos(token),
+    ]);
+
+    setUsuarios(u || []);
+    setInacUsuarios(ui || []);
+    setAlmacenes(a || []);
+    setInacAlmacenes(ai || []);
+  } catch (e) {
+    console.error("Error cargando usuarios/almacenes:", e);
+  }
+
+  try {
+    const r = await getReporte(token);
+    setReporte(r || []);
+  } catch (e) {
+    console.error("Error cargando reporte:", e);
+    setReporte([]);
+  }
+};
 
   const handleCrearUsuario = async () => {
     if (!nuevoUsuario.trim() || !password.trim()) { setMsgUsu({ tipo: "error", texto: "Completa usuario y contraseña" }); return; }

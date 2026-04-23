@@ -80,7 +80,7 @@ export const eliminarUsuario = (token, id) =>
   });
 
 export const reactivarUsuario = (token, id) =>
-  safeFetch(`${API}/admin/reactivar/${id}`, {
+  safeFetch(`${API}/admin/reactivar/usuario/${id}`, {
     method: "PUT",
     headers: h(token),
   });
@@ -106,38 +106,41 @@ export const eliminarAlmacen = (token, id) =>
   });
 
 export const reactivarAlmacen = (token, id) =>
-  safeFetch(`${API}/admin/almacenes/reactivar/${id}`, {
+  safeFetch(`${API}/admin/reactivar/almacen/${id}`, {
     method: "PUT",
     headers: h(token),
   });
 
-// Alias público para user dashboard
 export const getAlmacenesPublic = (token) =>
   safeFetch(`${API}/admin/almacenes`, { headers: h(token) });
 
 // ASISTENCIAS
 export const registrarAsistencia = (token, bodyOrAlmacenId) => {
-  const payload =
+  const almacenId =
     typeof bodyOrAlmacenId === "object"
-      ? bodyOrAlmacenId
-      : { almacenId: bodyOrAlmacenId };
+      ? bodyOrAlmacenId?.almacenId
+      : bodyOrAlmacenId;
 
-  return safeFetch(`${API}/user/asistencia`, {
+  return safeFetch(`${API}/asistencias/almacen?almacenId=${almacenId}`, {
     method: "POST",
-    headers: hj(token),
-    body: JSON.stringify(payload),
+    headers: h(token),
   });
 };
 
 export const getMisAsistencias = (token) =>
-  safeFetch(`${API}/user/asistencias`, {
+  safeFetch(`${API}/asistencias/mis`, {
     headers: h(token),
   });
 
-export const getMisAsistenciasDeUsuario = (token, usuarioId) =>
-  safeFetch(`${API}/admin/usuarios/${usuarioId}/asistencias`, {
-    headers: h(token),
-  });
+export const getMisAsistenciasDeUsuario = async (token, usuarioId) => {
+  try {
+    return await safeFetch(`${API}/admin/usuarios/${usuarioId}/asistencias`, {
+      headers: h(token),
+    });
+  } catch {
+    return [];
+  }
+};
 
 // PAGOS EXTRA / ADELANTOS / PAGOS
 export const getPagosExtra = (token) =>
@@ -145,13 +148,18 @@ export const getPagosExtra = (token) =>
     headers: h(token),
   });
 
-export const getPagosExtraDeUsuario = (token, usuarioId) =>
-  safeFetch(`${API}/admin/usuarios/${usuarioId}/pagos-extra`, {
-    headers: h(token),
-  });
+export const getPagosExtraDeUsuario = async (token, usuarioId) => {
+  try {
+    return await safeFetch(`${API}/admin/usuarios/${usuarioId}/pagos-extra`, {
+      headers: h(token),
+    });
+  } catch {
+    return [];
+  }
+};
 
 export const getMisPagosExtra = (token) =>
-  safeFetch(`${API}/user/pagos-extra`, {
+  safeFetch(`${API}/asistencias/mis-pagos-extra`, {
     headers: h(token),
   });
 
@@ -163,7 +171,7 @@ export const crearPagoExtra = (token, body) =>
   });
 
 export const registrarPagoExtra = (token, motivo, monto) =>
-  safeFetch(`${API}/user/pagos-extra`, {
+  safeFetch(`${API}/asistencias/pago-extra`, {
     method: "POST",
     headers: hj(token),
     body: JSON.stringify({ motivo, monto }),
@@ -194,15 +202,25 @@ export const getDashboard = (token) =>
     headers: h(token),
   });
 
-export const getReporte = (token) =>
-  safeFetch(`${API}/admin/reporte`, {
-    headers: h(token),
-  });
+export const getReporte = async (token) => {
+  try {
+    return await safeFetch(`${API}/admin/reporte`, {
+      headers: h(token),
+    });
+  } catch {
+    return [];
+  }
+};
 
-export const getReporteUsuarios = (token) =>
-  safeFetch(`${API}/admin/reporte/usuarios`, {
-    headers: h(token),
-  });
+export const getReporteUsuarios = async (token) => {
+  try {
+    return await safeFetch(`${API}/admin/reporte/usuarios`, {
+      headers: h(token),
+    });
+  } catch {
+    return [];
+  }
+};
 
 export const getPagosPorFechas = (token, desde, hasta) =>
   safeFetch(`${API}/admin/pagos?desde=${desde}&hasta=${hasta}`, {
@@ -210,7 +228,7 @@ export const getPagosPorFechas = (token, desde, hasta) =>
   });
 
 export const getMiTotal = async (token) => {
-  const data = await safeFetch(`${API}/user/total`, {
+  const data = await safeFetch(`${API}/asistencias/mi-total`, {
     headers: h(token),
   });
 
@@ -219,10 +237,15 @@ export const getMiTotal = async (token) => {
 };
 
 // NOTIFICACIONES
-export const getNotificaciones = (token) =>
-  safeFetch(`${API}/user/notificaciones`, {
-    headers: h(token),
-  });
+export const getNotificaciones = async (token) => {
+  try {
+    return await safeFetch(`${API}/user/notificaciones`, {
+      headers: h(token),
+    });
+  } catch {
+    return [];
+  }
+};
 
 export const confirmarNotif = (token, id) =>
   safeFetch(`${API}/user/notificaciones/${id}/confirmar`, {
