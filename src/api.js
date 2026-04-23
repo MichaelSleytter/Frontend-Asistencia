@@ -154,6 +154,12 @@ export const eliminarPagoExtra = (token, id) =>
     headers: h(token),
   });
 
+export const marcarPagoCompleto = (token, id) =>
+  safeFetch(`${API}/admin/pagos/${id}/completar`, {
+    method: "PUT",
+    headers: h(token),
+  });
+
 // DASHBOARD / REPORTES / PAGOS
 export const getDashboard = (token) =>
   safeFetch(`${API}/admin/dashboard`, {
